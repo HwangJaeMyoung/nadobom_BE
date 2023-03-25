@@ -2,8 +2,10 @@ from rest_framework import serializers
 from .models import od_data,image
 
 class OdDataSerializer(serializers.ModelSerializer):
-    xml=serializers.FileField(use_url=True,required=True)
+    label=serializers.FileField()
     class Meta:
         model = od_data
-        fields = ("image_id","xml")
+        fields = "__all__"
 
+    
+    

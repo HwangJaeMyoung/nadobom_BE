@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "image_api",
-    "od_data_api"
+    "od_data_api",
+    "report_api",
+    "download"
 ]
 
 MIDDLEWARE = [

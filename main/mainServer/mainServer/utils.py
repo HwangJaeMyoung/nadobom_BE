@@ -14,5 +14,5 @@ DB_URL= 'http://127.0.0.1:8000/'
 
 
 def getDB_URL(element):
-    return f"{DB_URL}{element}/"
+    return f"{DB_URL}/api/{element}/"
 

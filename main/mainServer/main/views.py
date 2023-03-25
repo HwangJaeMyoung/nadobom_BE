@@ -9,19 +9,16 @@ import os
 from mainServer.utils import getDB_URL,create_xml
 from django.core.files.storage import default_storage
 
+
 @api_view(['POST'])
-def my_view(request):
+def main_post(request):
     parser_classes = [MultiPartParser]
     image= request.FILES.get('image')
     response = requests.post(url=getDB_URL("image"), files={'image': image})
-    text=request.POST.get('text')
+    label=request.POST.get('label')
     response_dict=response.json()
     image_id=response_dict["id"]
-    create_xml(image_id,text)
-    with open(f'{image_id}.xml', 'rb') as f:
-        response = requests.post(url=getDB_URL("od_data"), files={'xml': f}, data={'image_id': image_id})
-    if default_storage.exists(f'{image_id}.xml'):
-        default_storage.delete(f'{image_id}.xml')
+    response = requests.post(url=getDB_URL("od_data"),data={'image_id': image_id,"label": label})
     return Response(response.json())
 
 
