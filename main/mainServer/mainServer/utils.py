@@ -10,7 +10,7 @@ def create_xml(name,text):
 
 
 # DB 서버 경로
-DB_URL= 'http://127.0.0.1:8000/'
+DB_URL= 'http://192.168.1.100:8000/'
 
 
 def getDB_URL(element):
