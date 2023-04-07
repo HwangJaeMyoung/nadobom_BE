@@ -2,11 +2,14 @@ from rest_framework import serializers
 from .models import image
 
 
+
 class ImageSerializer(serializers.ModelSerializer):
-    image=serializers.ImageField(use_url=True)
+    # image_url = serializers.SerializerMethodField()
     class Meta:
         model = image
-        fields = ("id","image","created_at","is_processed")
+        fields = ("id", "image", "created_at", "is_processed")
+    # def get_image_url(self, obj):
+    #     return obj.image.url
 
 # class ReportSerializer(serializers.ModelSerializer):
 #     class Meta:
