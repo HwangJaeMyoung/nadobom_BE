@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
 from pathlib import Path
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,10 +24,10 @@ SECRET_KEY = "django-insecure-!lk)z(p@35iyshu3m2v4kl5e*so8*vn_r^dr(ob^^tt@os=vfw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
-MEDIA_URL="/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR,"media")
+#MEDIA_URL="/media/"
+#MEDIA_ROOT = os.path.join(BASE_DIR,"media")
 
 # Application definition
 
@@ -42,8 +41,27 @@ INSTALLED_APPS = [
     "image_api",
     "od_data_api",
     "report_api",
-    "download"
+    "download",
+    "storages",
+    "rest_framework",
+    "seg_data_api",
+    # "debug"
 ]
+
+
+
+AWS_ACCESS_KEY_ID = 'AKIA44Z64DQPZ2U4BQOA' # .csv 파일에 있는 내용을 입력 Access key ID
+AWS_SECRET_ACCESS_KEY = 'RDqzc11KcfupTaDVe1Hzcna+B/zf6m+QxHUFB9Iz' # .csv 파일에 있는 내용을 입력 Secret access key
+AWS_REGION = 'ap-northeast-2'
+
+###S3 Storages
+AWS_STORAGE_BUCKET_NAME = 'nadobom' # 설정한 버킷 이름
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME,AWS_REGION)
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+MEDIA_ROOT = os.path.join(BASE_DIR, '')
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -79,15 +97,22 @@ WSGI_APPLICATION = "DBServer.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+import pymysql
+pymysql.install_as_MySQLdb()
+
 DATABASES = {
     "default": {
         "ENGINE": 'django.db.backends.mysql',
-        'NAME': 'nadobom_db',
-        'USER': 'root',
+        'NAME': 'nadobom',
+        'USER': 'omyo',
         'PASSWORD': '0329',
         'HOST': 'localhost',
         'PORT': '3306',
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+        },
     }
+    
 }
 
 

@@ -1,52 +1,44 @@
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser,JSONParser
 from django.http import HttpResponse, JsonResponse
-from .serializers import OdDataSerializer
-from .models import od_data,image
+from .serializers import OdDataSerializer,LabeledOdDataSerializer
+from .models import od_data,image,labeled_od_data
 from rest_framework import generics
 from rest_framework.response import Response
 import rest_framework.status as status
 import os
 from django.conf import settings
-from io import StringIO
+from io import StringIO,BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
-
+from rest_framework.parsers import  JSONParser,MultiPartParser
 
 class OdDataListCreate(generics.ListCreateAPIView):
+    parser_classes = [MultiPartParser, JSONParser]
     queryset = od_data.objects.all()
     serializer_class = OdDataSerializer
-    def post(self, request, *args, **kwargs):
-        label = request.POST.get('label')
-        image_id = request.POST.get('image_id')
-        # image.objects.filter(id=id)
-        # "image": "http://127.0.0.1:8000/media/FP5jE4YaIAgXPct.jpg",
-        label_file = StringIO(label)
-        label_upload_file = InMemoryUploadedFile(
-            label_file, None, f'{image_id}.txt', 'text/plain', len(label), None)
-        serializer = self.get_serializer(data={"image_id": image_id, "label": label_upload_file})
+    def create_txt(self, data):
+        data=data.copy()
+        file_content = data['label']
+        file_id = data['image_id']
+        image_=image.objects.get(id=file_id)
+        image_name = os.path.basename(image_.image.name)
+        label_name, _ = os.path.splitext(image_name)
+
+        file_name=label_name
+        file_content_bytes = file_content.encode('utf-8')
+        file_object = BytesIO(file_content_bytes)
+        
+        in_memory_file = InMemoryUploadedFile(
+            file_object, None, f'{file_name}.txt', 'text/plain',
+            file_object.getbuffer().nbytes, None)
+        data['label'] = in_memory_file
+        return data
+    def create(self, request, *args, **kwargs):
+        data=self.create_txt(request.data)
+        serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-
-    # def post(self, request, *args, **kwargs):
-    #     label = request.POST.get('label')
-
-    #     file_path = 'path/to/file.txt'
-    #     file_path = 'path/to/file.txt'
-    #     with open(file_path, 'w') as f:
-    #         f.write(label)
-
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     xml = request.FILES['label']
-    #     file_path = f'media/od_data/{xml.name}'
-    #     with open(file_path, 'wb+') as f:
-    #         for chunk in xml.chunks():
-    #             f.write(chunk)
-    #     serializer.save(xml=file_path)
-    #     headers = self.get_success_headers(serializer.data)
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
     
 class OdDataRetrieveDestroy(generics.RetrieveDestroyAPIView):
     queryset = od_data.objects.all()
@@ -54,3 +46,16 @@ class OdDataRetrieveDestroy(generics.RetrieveDestroyAPIView):
     lookup_field = 'id'
 
 
+class LabeledOdDataListCreate(generics.ListCreateAPIView):
+    parser_classes = [MultiPartParser, JSONParser]
+    queryset =  labeled_od_data.objects.all()
+    serializer_class = LabeledOdDataSerializer
+    def delete(self, request, *args, **kwargs):
+        self.queryset.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class LabeledOdDataRetrieveDestroy(generics.RetrieveDestroyAPIView):
+    queryset = labeled_od_data.objects.all()
+    serializer_class = OdDataSerializer
+    lookup_field = 'id'

@@ -25,20 +25,22 @@ SECRET_KEY = "django-insecure-m%quym&q&+jn7r)75w6(v%i9b+#*bm62n21@t%x+l91o)u0xd%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["52.79.236.33"]
 import os 
 MEDIA_URL="/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR,"media")
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "main"
+    "rest_framework",
+    "main",
+    "admin",
+    "update"
 ]
 
 MIDDLEWARE = [
