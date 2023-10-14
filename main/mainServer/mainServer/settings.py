@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-m%quym&q&+jn7r)75w6(v%i9b+#*bm62n21@t%x+l91o)u0xd%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["52.78.7.170"]
+ALLOWED_HOSTS = ["52.79.236.33"]
 import os 
 MEDIA_URL="/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR,"media")
@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "main",
-    "admin"
+    "admin",
+    "update"
 ]
 
 MIDDLEWARE = [

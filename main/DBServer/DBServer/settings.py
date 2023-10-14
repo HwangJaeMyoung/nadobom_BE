@@ -24,7 +24,7 @@ SECRET_KEY = "django-insecure-!lk)z(p@35iyshu3m2v4kl5e*so8*vn_r^dr(ob^^tt@os=vfw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['3.35.210.27']
+ALLOWED_HOSTS = ["*"]
 
 #MEDIA_URL="/media/"
 #MEDIA_ROOT = os.path.join(BASE_DIR,"media")
@@ -40,10 +40,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "image_api",
     "od_data_api",
-    #"report_api",
+    "report_api",
     "download",
     "storages",
     "rest_framework",
+    "seg_data_api",
     # "debug"
 ]
 
@@ -107,7 +108,11 @@ DATABASES = {
         'PASSWORD': '0329',
         'HOST': 'localhost',
         'PORT': '3306',
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+        },
     }
+    
 }
 
 

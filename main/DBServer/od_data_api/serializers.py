@@ -1,11 +1,18 @@
 from rest_framework import serializers
-from .models import od_data,image,S3MediaStorage
+from .models import od_data,image,S3MediaStorage,labeled_od_data
 class OdDataSerializer(serializers.ModelSerializer):
     label = serializers.FileField()
     class Meta:
         model = od_data
         fields = ("image_id", "label")
         
+class LabeledOdDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = labeled_od_data
+        fields = ("image_id",)
+
+
+
 # class OdDataSerializer(serializers.ModelSerializer):
 #     label = serializers.FileField(write_only=True)
     
